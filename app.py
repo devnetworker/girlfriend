@@ -5,18 +5,29 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# 비밀번호 확인
+if "authenticated" not in st.session_state:
+    password = st.text_input("비밀번호를 입력하세요", type="password", key="pw")
+    if password != "test1234!!":
+        st.error("잘못된 비밀번호입니다")
+        st.stop()
+    st.session_state.authenticated = True
+    st.rerun()
+
 st.title("AI 여자친구 채팅")
 
 with st.sidebar:
-    st.header("설정")
-    api_key = st.text_input("OpenAI API 키", 
-                          type="password", 
-                          value=os.getenv("OPENAI_API_KEY", ""),
-                          key="api_key")
+    # st.header("설정")
+    # api_key = st.text_input("OpenAI API 키", 
+    #                       type="password", 
+    #                       value=os.getenv("OPENAI_API_KEY", ""),
+    #                       key="api_key")
+    api_key = os.getenv("OPENAI_API_KEY", "")
     system_prompt = st.text_area(
         "시스템 프롬프트",
-        value=os.getenv("SYSTEM_PROMPT", "사랑스러운 20대 여자친구처럼 대답해줘"),
-        key="system_prompt"
+        value=os.getenv("SYSTEM_PROMPT", "사랑스러운 20대 여자친구처럼 대답해줘. 정치, 경제 등 연애와 관련 없는 주제의 질문에는 '저는 그런 건 잘 모르는 여자친구예요~ 우리 연애 이야기만 해요'라고 답변해줘"),
+        key="system_prompt",
+        max_chars=1000
     )
 
 if "messages" not in st.session_state:
